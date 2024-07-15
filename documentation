@@ -1,0 +1,85 @@
+shell can handle the following commands:-
+Internal commands:
+1. cd - change the current working directroy
+   
+2. pwd - print the name of working directroy
+
+3. echo - print the input text
+	-n - do not print the newline
+	-E - ingnore the blckslash escapes
+	--help - print --help
+External commands:
+1. ls - list the given directories/directory contents (which do not start with .)
+	-a - do not ignore entries starting with .
+	-d - list directories themselves, not their contents
+2. date - print system date and time
+	-u - print or set Coordinated Universal Time (UTC)
+	-R - output date and time in RFC 5322 format
+3. cat - print the files content
+	-E - display $ at end of each line
+	-n - number all output lines
+4. mkdir - make directories
+	-v - print message for created directory
+	-m - set given file mode(-m=444 is allowed -m=rax is not allowed)
+5. rm - remove files
+	-v - print message for deleted files
+	-i - prompt before every removal
+6. exit - close/terminate the shell
+
+
+Assumptions:
+1. one command can be of maximum 200 characters.
+2. for thread execution(instead of fork and exec) &t will be provided at the end of the command.
+3. mkdir -m will not accept -m=rax type or -m 345 type command only -m=543 type command is accepted.
+4. cat command can only print the contents of existing file and cannot write in files.
+5. echo command can only work with -n and -E options so it will not handle escape characters(/n,/b,/t etc.).
+6. rm -i will first ask to remove the file and then it will try to delete it.
+
+
+// create some files for test
+touch file1 file2 file3
+// also write in these files before testing(for cat command) 
+
+make  // command to run the shell
+test cases:
+
+date
+date &t
+date -u
+date -R
+cat file1
+cat -E file2 &t
+cat -n file3
+mkdir dir1
+mkdir -m=321 dir2
+mkdir -v dir3 dir4 &t
+rm file1
+rm -v file2 &t
+rm -i file3
+ls
+ls .. &t
+ls -a /home
+ls -d &t
+echo ankit
+echo "2021014"
+echo --help &t
+echo -n noline
+pwd 
+pwd -L
+pwd -P &t
+cd .
+cd -L .
+cd -P . &t
+
+some error handled:
+1. wrong command name given
+2. wrong option entered
+3. missing oprends for a command
+4. wrong directory name given
+5. wrong path name given
+6. file not exist
+7. cannot execute the command
+8. cannot create the thread
+9. invalid mode for directory given
+10. file/directory already exist
+
